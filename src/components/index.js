@@ -4,3 +4,4 @@ export { Loading } from "./loading";
 export { Pagination } from "./pagination";
 export { Location } from "./location";
 export { Episode } from "./episode";
+export { Error } from "./error";

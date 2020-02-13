@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
+import { produce } from "immer";
 import { Divider } from "semantic-ui-react";
-import { Pagination } from "../components";
+import { Pagination, Error } from "../components";
 import { CharactersList } from "./CharactersList";
 import { getCharacter, searchByPage } from "../api";
 
-const reducer = (state, { type, characters, nextPage, prevPage }) => {
+const reducer = (state, { type, characters, nextPage, prevPage, error }) => {
   switch (type) {
     case "INIT":
       return {
@@ -12,6 +13,10 @@ const reducer = (state, { type, characters, nextPage, prevPage }) => {
         nextPage,
         prevPage
       };
+    case "ERROR":
+      return produce(state, draftState => {
+        draftState.error = error;
+      });
     default:
       return state;
   }
@@ -22,7 +27,8 @@ const Characters = React.memo(() => {
   const initialState = {
     characters: [],
     nextPage: "",
-    prevPage: ""
+    prevPage: "",
+    error: null
   };
   const [state, dispatch] = React.useReducer(reducer, initialState);
   const loadData = data => {
@@ -34,13 +40,25 @@ const Characters = React.memo(() => {
     });
   };
 
+  const onError = data => {
+    dispatch({
+      type: "ERROR",
+      error: data.toString()
+    });
+  };
+
   useEffect(() => {
     getCharacter()
       .then(data => {
         loadData(data);
       })
+      // Handling fetches data errors:
+      // of course, we can do better than logging or throwing an error
+      // we can show a not found screen
+      // or if we are using sentry we can send the error to sentry
+      // I will dispatch "ERROR" action with error to show the error on UI 
       .catch(error => {
-        console.log(error);
+        onError(error);
       });
   }, []);
 
@@ -62,7 +80,11 @@ const Characters = React.memo(() => {
         nextPage={state.nextPage}
       />
       <Divider />
-      <CharactersList characters={state.characters} />
+      {state.error ? (
+        <Error error={state.error} />
+      ) : (
+        <CharactersList characters={state.characters} />
+      )}
     </>
   );
 });
