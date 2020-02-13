@@ -18,7 +18,9 @@ const Location = React.memo(
             <>
               <p>Name: {location.name}</p>
               <p>Dimension: {location.dimension}</p>
-              <p>Desidents: {location.residents.length}</p>
+              <p>
+                Desidents: {location.residents ? location.residents.length : 0}
+              </p>
             </>
           ) : (
             <Placeholder data-testid="loading">
