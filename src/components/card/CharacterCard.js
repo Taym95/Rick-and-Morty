@@ -19,6 +19,7 @@ const CharacterCard = React.memo(
   ({ name, image, status, species, origin, location, episode }) => {
     return (
       <Card
+        data-testid="character-card"
         image={image}
         header={`Name: ${name}`}
         meta={`Status: ${status}`}

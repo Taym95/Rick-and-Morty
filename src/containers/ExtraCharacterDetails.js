@@ -94,7 +94,7 @@ const ExtraCharacterDetails = React.memo(
     };
 
     return (
-      <Accordion>
+      <Accordion data-testid="extra-character-details">
         <Location
           index={0}
           activeIndex={activeIndex}

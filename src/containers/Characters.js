@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Divider } from "semantic-ui-react";
-import { MyHeader, Loading, Pagination } from "../components";
+import { Pagination } from "../components";
 import { CharactersList } from "./CharactersList";
 import { getCharacter, searchByPage } from "../api";
 
@@ -55,7 +55,6 @@ const Characters = React.memo(() => {
 
   return (
     <>
-      <MyHeader title={"Rick and Morty characters"} />
       <Pagination
         onNextPress={onNextPress}
         onPrevPress={onPrevPress}
@@ -63,11 +62,7 @@ const Characters = React.memo(() => {
         nextPage={state.nextPage}
       />
       <Divider />
-      {state.characters.length === 0 ? (
-        <Loading />
-      ) : (
-        <CharactersList characters={state.characters} />
-      )}
+      <CharactersList characters={state.characters} />
     </>
   );
 });

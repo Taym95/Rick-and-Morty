@@ -4,7 +4,7 @@ import { Icon, Accordion, Placeholder } from "semantic-ui-react";
 const Location = React.memo(
   ({ index, title, activeIndex, handleClick, location }) => {
     return (
-      <>
+      <div data-testid="location">
         <Accordion.Title
           active={activeIndex === index}
           index={index}
@@ -29,7 +29,7 @@ const Location = React.memo(
             </Placeholder>
           )}
         </Accordion.Content>
-      </>
+      </div>
     );
   }
 );

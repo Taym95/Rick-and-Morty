@@ -4,7 +4,7 @@ import { Icon, Accordion, Placeholder } from "semantic-ui-react";
 const Episode = React.memo(
   ({ index, title, activeIndex, handleClick, episodes }) => {
     return (
-      <>
+      <div data-testid="spisode">
         <Accordion.Title
           active={activeIndex === index}
           index={index}
@@ -28,7 +28,7 @@ const Episode = React.memo(
             </>
           )}
         </Accordion.Content>
-      </>
+      </div>
     );
   }
 );

@@ -2,6 +2,7 @@ import React, { lazy } from "react";
 import { Route, Switch, BrowserRouter } from "react-router-dom";
 import { Container } from "semantic-ui-react";
 import { withSuspense } from "./HOC";
+import { MyHeader } from "./components";
 
 const Characters = lazy(() =>
   import("./containers").then(({ Characters }) => ({
@@ -19,8 +20,13 @@ const Routes = () => {
   );
 };
 
+// I usually user redux with redux-saga for the big apps and centralized state.
+// But we don't need to install another library since react has already build-in hooks
+// for managing state
+// but I can easily re-implement it with redux
 const AppContainer = () => (
   <Container>
+    <MyHeader title={"Rick and Morty characters"} />
     <Routes />
   </Container>
 );
