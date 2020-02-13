@@ -1,1 +1,2 @@
-export { CharacterList } from "./CharacterList";
+export { Characters } from "./Characters";
+export { ExtraCharacterDetails } from "./ExtraCharacterDetails";
