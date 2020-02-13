@@ -1,4 +1,4 @@
-## Rick-and-morty
+## Rick-and-Morty
 
 React app to display the profiles of the Rick and Morty characters.
 ### `yarn start`
