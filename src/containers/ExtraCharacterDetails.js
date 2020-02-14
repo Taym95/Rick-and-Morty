@@ -1,59 +1,21 @@
 import React, { useState } from "react";
-import { produce } from "immer";
 import { Accordion } from "semantic-ui-react";
 import { getCharacterLocation, getCharacterEpisodes } from "../api";
 import { Location, Episode } from "../components";
-
-const reducer = (state, { type, payload }) => {
-  switch (type) {
-    case "LOAD_ORIGIN":
-      return produce(state, draftState => {
-        draftState.characterOrigin = payload;
-      });
-    case "LOAD_LOCATION":
-      return produce(state, draftState => {
-        draftState.characterLocation = payload;
-      });
-    case "LOAD_EPISODES":
-      return produce(state, draftState => {
-        draftState.characterEpisodes = payload;
-      });
-    default:
-      return state;
-  }
-};
+import {
+  characterDetailsReducer,
+  characterDetailsInitialState
+} from "../reducers";
+import { loadLocation, loadOrigin, loadEpisodes } from "../actions";
 
 // Don’t block something the user will see first because of something the user will not see first.
 const ExtraCharacterDetails = React.memo(
   ({ origin, location, episode, name }) => {
-    const initialState = {
-      characterOrigin: null,
-      characterLocation: null,
-      characterEpisodes: []
-    };
     const [activeIndex, useActiveIndex] = useState(3);
-    const [state, dispatch] = React.useReducer(reducer, initialState);
-
-    const loadOrigin = data => {
-      dispatch({
-        type: "LOAD_ORIGIN",
-        payload: data
-      });
-    };
-
-    const loadLocation = data => {
-      dispatch({
-        type: "LOAD_LOCATION",
-        payload: data
-      });
-    };
-
-    const loadEpisodes = data => {
-      dispatch({
-        type: "LOAD_EPISODES",
-        payload: data
-      });
-    };
+    const [state, dispatch] = React.useReducer(
+      characterDetailsReducer,
+      characterDetailsInitialState
+    );
 
     const handleClick = (e, titleProps) => {
       const { index } = titleProps;
@@ -78,19 +40,25 @@ const ExtraCharacterDetails = React.memo(
 
     const getLocation = () => {
       const url = location.url.replace("https://rickandmortyapi.com/api/", "");
-      getCharacterLocation(url).then(response => loadLocation(response));
+      getCharacterLocation(url).then(response =>
+        loadLocation(response, dispatch)
+      );
     };
 
     const getOrigin = () => {
       const url = origin.url.replace("https://rickandmortyapi.com/api/", "");
-      getCharacterLocation(url).then(response => loadOrigin(response));
+      getCharacterLocation(url).then(response =>
+        loadOrigin(response, dispatch)
+      );
     };
 
     const getEpisodes = () => {
       const urls = episode.map(url =>
         url.replace("https://rickandmortyapi.com/api/", "")
       );
-      getCharacterEpisodes(urls).then(response => loadEpisodes(response));
+      getCharacterEpisodes(urls).then(response =>
+        loadEpisodes(response, dispatch)
+      );
     };
 
     return (
