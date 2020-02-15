@@ -1,8 +1,10 @@
 import * as React from "react";
-import { render, fireEvent, act, cleanup } from "@testing-library/react";
+import { render, fireEvent, act, cleanup, wait } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { CharactersList } from "../CharactersList";
+import { Characters } from "../Characters";
 import { Pagination } from "../../components";
+import * as API from "../../api";
 
 const mockData = {
   info: {
@@ -119,6 +121,20 @@ const mockData = {
   ]
 };
 
+beforeAll(() => {
+  const consoleError = console.error;
+  jest.spyOn(console, "error").mockImplementation((...args) => {
+    if (
+      !args[0].includes(
+        "Warning: An update to %s inside a test was not wrapped in act"
+      )
+    ) {
+      consoleError(...args);
+    }
+  });
+  API.getCharacter = jest.fn(() => Promise.resolve(mockData));
+});
+
 describe("Containers tests", () => {
   afterEach(cleanup);
 
@@ -208,5 +224,24 @@ describe("Containers tests", () => {
     });
 
     expect(logSpy).not.toHaveBeenCalledWith("onPrevPress");
+  });
+
+  test("Should display Loader first when characters data is not leaoded yet", async () => {
+    const { getByTestId } = render(<Characters />);
+
+    const Loader = getByTestId("loading");
+    expect(Loader).toBeInTheDocument();
+  });
+
+  test("should display characters card list if characters data is leaoded ", async () => {
+    const { getByTestId, getAllByTestId } = render(<Characters />);
+
+    await wait();
+
+    const charactersList = getByTestId("characters-list");
+    const characterCards = getAllByTestId("character-card");
+
+    expect(charactersList).toBeInTheDocument();
+    expect(characterCards).toHaveLength(2);
   });
 });
